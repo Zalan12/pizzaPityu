@@ -1,0 +1,158 @@
+<div class="container">
+    <h3>Felhasználók</h3>
+
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Név</th>
+                <th>email</th>
+                <th class="text-end">Phone</th>
+                <th class="text-end">Role</th>
+                <th class="text-end">Cím</th>
+                <th class="text-end">Státusz</th>
+                <th class="text-end">Műveletek</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of pagedUser; let i = index">
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.email}}</td>
+                <td class="text-end">{{user.phone}}</td>
+                <td class="text-end">{{user.role}}</td>
+                <td class="text-end">{{user.address}}</td>
+                <td class="text-end" *ngIf="user.status">Aktív</td>
+                 <td class="text-end" *ngIf="!user.status">Inaktív</td>
+                <td class="text-end">
+                    <button class="btn me-3 text-center" data-bs-toggle="modal" data-bs-target="#infoModal" (click)="getUser(user.id)"><i class="bi bi-info-circle-fill" style="color: rgb(16, 189, 241);"></i></button>
+                    <button class="btn me-3 text-center" *ngIf="user.status==false" (click)="banUser(user.id)"><i class="bi bi-unlock" style="color: green;"></i></button>
+                    <button class="btn me-3 text-center" *ngIf="user.status==true" (click)="banUser(user.id)"><i class="bi bi-ban-fill" style="color: rgb(228, 0, 0);"></i></button>
+                </td>
+            </tr>
+            <tr>
+              <td colspan="9">
+                  <p class="text-end">Összesen {{pagedUser.length}} felhasználó listázva</p>
+              </td>
+            </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example" *ngIf="totalPages > 1">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link"  aria-label="Previous" (click)="setPage(currentPage-1)" [class.disabled]="currentPage == 1">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+              <a class="page-link" (click)="setPage(i + 1)"  [class.active]="currentPage == i + 1">{{i + 1}}</a>
+            </li>
+
+          <li class="page-item">
+            <a class="page-link"  aria-label="Next" (click)="setPage(currentPage+1)" [class.disabled]="currentPage == totalPages">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+
+    <!--INFO MODAL-->
+    <div class="modal fade" id="infoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Megerősítés</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-stripped">
+                    <thead>
+                      <tr>
+                      <h4>A felhasználó adatai</h4>
+                    </tr>
+                        <th>
+                            <tr>Név:</tr>
+                            <tr>Email:</tr>
+                            <tr>Cím:</tr>
+                            <tr>Tel.:</tr>
+                            <tr>Status:</tr>
+                        </th>
+                              <th>
+                              <tr>{{selectedUser?.name}}</tr>
+                              <tr>{{selectedUser?.email}}</tr>
+                              <tr>{{selectedUser?.address}}</tr>
+                              <tr>{{selectedUser?.phone}}</tr>
+                              <tr>{{selectedUser?.status}}</tr>
+                          </th>
+                       </thead>
+                       <h4>A felhasználó rendelései</h4>
+                       <tbody>
+                        <tr>
+                          <th class="text-center">Ár (Ft)</th>
+                          <th>Státusz</th>
+                          <th>Rendelés dátuma</th>
+                          <th>Részletek</th>
+                          
+                        </tr>
+                        <tr *ngFor="let orderdata of orderdatas">
+                          
+                          <td class="text-center">{{orderdata.rendeles_ara}} Ft</td>
+                          <td>{{orderdata.rendeles_statusz}}</td>
+                          <td>{{orderdata.kelt |date}}</td>
+                          <td> <button class="btn me-3" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-info-circle-fill" style="color: rgb(16, 189, 241);"></i></button></td>
+                        </tr>
+                       </tbody>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hupika</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" id="orderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Rendelés részletei</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <table class="table table-hover table-stripped">
+                  <thead>
+                    <tr>
+                    
+                  </tr>
+                      <tr>
+                          <th>Pizza neve:</th>
+                          <th>Leírás</th>
+                          <th>Mennyiseg</th>
+                          <th>Ár:</th>
+                          <th>Dátum:</th>
+                          
+                      </tr>
+                     </thead>
+                     <tbody>
+                        <tr *ngFor="let orderdata of orderdatas">
+                            <td>{{orderdata.pizza_nev}}</td>
+                            <td>{{orderdata.leiras}}</td>
+                            <td>{{orderdata.mennyiseg}}</td>
+                            <td>{{orderdata.rendeles_ara}}Ft</td>
+                            <td>{{orderdata.kelt |date}}</td>
+                        </tr>
+                     </tbody>
+
+              </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hupika</button>
+            
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

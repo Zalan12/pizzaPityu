@@ -1,0 +1,103 @@
+<div class="container">
+    <h3>Rendelések kezelése</h3>
+
+
+
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Kiadás dátuma</th>
+                <th>Befejezés dátuma</th>
+                <th>Felhasználói azonosító</th>
+                <th>Ár</th>
+                <th>Státusz</th>
+                <th>Műveletek</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of pagedOrders; let i = index">
+                <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.id}}.</td>
+                <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.created_at|date}}</td>
+                <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.updated_at|date}}</td>
+                <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.user_id}}</td>
+                <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.total}} {{currency}}</td>
+                <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.status}}</td>
+                <td> 
+                    <button class="btn me-3" data-bs-toggle="modal" data-bs-target="#orderModal"><i class="bi bi-info-circle-fill" style="color: rgb(16, 189, 241);"></i></button>
+                    <button class="btn me-3" *ngIf="order.status=='pending'" ><i class="bi bi-fire" style="color: rgb(231, 112, 0);" (click)="finishOrder(order.id)"></i></button>
+                </td>
+                
+
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7">Összesen: <strong>{{orders.length}}</strong> rendelés</td>
+            </tr>
+        </tfoot>
+    </table>
+    <nav aria-label="Page navigation example" *ngIf="totalPages > 1">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link"  aria-label="Previous" (click)="setPage(currentPage-1)" [class.disabled]="currentPage == 1">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+              <a class="page-link" (click)="setPage(i + 1)"  [class.active]="currentPage == i + 1">{{i + 1}}</a>
+            </li>
+
+          <li class="page-item">
+            <a class="page-link"  aria-label="Next" (click)="setPage(currentPage+1)" [class.disabled]="currentPage == totalPages">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="modal fade" id="orderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Rendelés részletei</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-stripped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Kiadás dátuma</th>
+                            <th>Befejezés dátuma</th>
+                            <th>Felhasználói azonosító</th>
+                            <th>Ár</th>
+                            <th>Státusz</th>
+                        </tr>
+
+                       </thead>
+                       <tbody>
+                        <tr *ngFor="let order of pagedOrders; let i = index">
+                          <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.id}}.</td>
+                          <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.created_at|date}}</td>
+                          <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.updated_at|date}}</td>
+                          <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.user_id}}</td>
+                          <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.total}} {{currency}}</td>
+                          <td [style]="order.status=='completed'?'color:rgba(255,255,255,0.5)':''">{{order.status}}</td>
+                      
+                          
+                          
+          
+                      </tr>
+                       </tbody>
+  
+                </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hupika</button>
+              
+            </div>
+          </div>
+        </div>
+    </div>
