@@ -1,1 +1,40 @@
-<p>pizzalist works!</p>
+<h3>Pizzák listája</h3>
+
+<p *ngIf="!isLoggedIn">A rendeléshez be kell jelenkezz</p>
+
+<div class="mb-3 d-flex justify-content-end">
+    <input type="text" class="form-control w-25" placeholder="Keresés..." [(ngModel)]="searchTerm" (input)="filterPizzas()">
+</div>
+<table class="table table-hover table-stripped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Megnevezés</th>
+            <th>Leírás</th>
+            <th class="text-end">Kalória</th>
+            <th class="text-end">Ár</th>
+            <th class="text-end">Kosárba</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let pizza of filteredPizzas; let i = index">
+            <td>{{i+1}}.</td>
+
+            <td>{{pizza.name}}</td>
+            <td>{{pizza.descrip}}</td>
+            <td class="text-end">{{pizza.calories  }} kcal</td>
+            <td class="text-end">{{pizza.price}} {{currency}}</td>
+            <td class="text-end">
+                <div class="d-flex flex-row justify-content-end gap-4">
+                <input type="number" class="form-control w-50" id="amount" [(ngModel)]="pizza.amount" placeholder="" min="0" value="0">
+                <button class="btn btn-primary" (click)="addToCart(pizza.id)"><i class="bi bi-cart-check"></i></button>
+            </div>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6">Összesen: <strong>{{pizzas.length}}</strong> rendelés</td>
+        </tr>
+    </tfoot>
+</table>
